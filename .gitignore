@@ -10,7 +10,7 @@ Cargo.lock
 *.wav
 .*
 **/.*
-**/main.rs
+# **/main.rs
 
 !.gitignore
 !.github
