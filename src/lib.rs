@@ -47,9 +47,21 @@ impl Wav {
         while file.read_exact(&mut buffer).is_ok() {
             let sample = i16::from_le_bytes(buffer);
 
-            let i = dst[0].len() % self.channels as usize;
+            let v = dst.get(0).ok_or(io::Error::new(
+                io::ErrorKind::NotFound,
+                "the vector is empty, unable to retrieve a mutable reference",
+            ))?;
 
-            dst[i].push(sample);
+            let v_len = v.len();
+
+            let i = v_len % self.channels as usize;
+
+            dst.get_mut(i)
+                .ok_or(io::Error::new(
+                    io::ErrorKind::NotFound,
+                    "index out of bounds - unable to retrieve mutable reference",
+                ))?
+                .push(sample);
         }
 
         Ok(())
